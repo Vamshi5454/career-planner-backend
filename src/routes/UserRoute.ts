@@ -16,4 +16,11 @@ router.post("/register", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error in fetching the users" });
   }
 });
+
+// router.post("/login", async (req:Request,res: Response) =>{
+//     try{
+//         const
+//     }
+// })
+
 export default router;
