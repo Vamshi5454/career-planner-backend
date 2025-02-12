@@ -6,8 +6,6 @@ import { User } from "../entities/User";
 const app = express();
 const router = Router();
 
-// app.get()
-
 router.post("/register", async (req: Request, res: Response) => {
   try {
     const users = await AppDataSource.getRepository(User).find();
@@ -16,11 +14,5 @@ router.post("/register", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error in fetching the users" });
   }
 });
-
-// router.post("/login", async (req:Request,res: Response) =>{
-//     try{
-//         const
-//     }
-// })
 
 export default router;
