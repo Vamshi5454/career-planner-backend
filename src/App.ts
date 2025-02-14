@@ -9,12 +9,13 @@ dotenv.config();
 
 const app = express();
 
-const port = 3000;
+const port = 3001;
 
 app.use(express.json());
 connectDB();
 
 app.use("/auth", UserRoute);
+app.use("/send", UserRoute);
 
 app.listen(port, async () => {
   console.log("App is running in", port);
