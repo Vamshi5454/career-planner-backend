@@ -7,11 +7,10 @@ import { UserController } from "../controllers/UserController";
 import { useContainer } from "class-validator";
 import { AwsController } from "../controllers/AwsController";
 
-const app = express();
 const router = Router();
 
-const upload = multer({ storage: multer.memoryStorage() });
+// const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/register", UserController.register);
-router.post("/upload", upload.single("resume"), AwsController.UploadToAws);
+// router.post("/upload", upload.single("resume"), AwsController.UploadToAws);
 export default router;

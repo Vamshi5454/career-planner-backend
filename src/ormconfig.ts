@@ -29,6 +29,7 @@
 
 import { DataSource } from "typeorm";
 import { User } from "./entities/User";
+import { Resume } from "./entities/Resume";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -42,5 +43,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME, // Replace with your database name
   synchronize: true, // Set to true only in development
   logging: true,
-  entities: [User], // Your TypeORM entities
+  entities: [User, Resume], // Your TypeORM entities
 });

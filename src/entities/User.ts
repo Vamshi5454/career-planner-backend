@@ -7,13 +7,13 @@ export class User {
   id!: number;
 
   @Column()
-  name!: String;
+  name!: string; // ✅ Fixed type
 
-  @Column()
-  email?: String;
+  @Column({ nullable: true }) // ✅ Allows NULL in DB
+  email?: string;
 
-  @Column()
-  password?: String;
+  @Column({ nullable: true }) // ✅ Allows NULL in DB
+  password?: string;
 
   @OneToMany(() => Resume, (resume) => resume.user)
   resumes!: Resume[];

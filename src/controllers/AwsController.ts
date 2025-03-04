@@ -4,6 +4,9 @@ import AWS from "aws-sdk";
 
 import dotenv from "dotenv";
 import multer, { Multer } from "multer";
+import { AppDataSource } from "../ormconfig";
+import { Resume } from "../entities/Resume";
+import { User } from "../entities/User";
 
 dotenv.config();
 
@@ -19,14 +22,27 @@ export const AwsController = {
   UploadToAws: async (req: Request, res: Response): Promise<void> => {
     try {
       const file = req.file as Express.Multer.File;
+      const { userId } = req.body;
+
+      const userRepository = AppDataSource.getRepository(User);
+      const user = await userRepository.findOne({ where: { id: userId } });
+      if (!userId) {
+        res.status(400).json("userId required");
+      }
       if (!file) {
         res.status(400).json({ message: " No file Uploaded" });
         return;
       }
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      const s3key = `resumes/${Date.now()}-${file.originalname}`;
 
       const params = {
         Bucket: process.env.AWS_S3_BUCKET!,
-        Key: `resumes/${Date.now()}-${file.originalname}`,
+        Key: s3key,
         Body: file.buffer,
         ContentType: file.mimetype,
       };
@@ -34,6 +50,13 @@ export const AwsController = {
       console.log(process.env.AWS_S3_BUCKET);
 
       const uploadResult = await s3.upload(params).promise();
+
+      const resumeRepository = AppDataSource.getRepository(Resume);
+      const newResume = resumeRepository.create({
+        user,
+        s3key,
+      });
+      await resumeRepository.save(newResume);
 
       res.json({
         message: "Resume Upload Successfully",
