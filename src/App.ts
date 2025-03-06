@@ -16,7 +16,8 @@ app.use(express.json());
 connectDB();
 
 app.use("/auth", UserRoute);
-app.use("/send", uploadRoute);
+
+app.use("/resume", uploadRoute);
 
 app.listen(port, async () => {
   console.log("App is running in", port);

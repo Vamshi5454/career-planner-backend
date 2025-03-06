@@ -9,4 +9,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 uploadRoute.post("/upload", upload.single("resume"), AwsController.UploadToAws);
 
+uploadRoute.get("/get", AwsController.getFromS3);
+
 export default uploadRoute;

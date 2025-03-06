@@ -66,4 +66,54 @@ export const AwsController = {
       res.status(500).json({ message: "File upload error", error });
     }
   },
+  getFromS3: async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.body;
+
+      if (!userId) {
+        res.status(404).json("UserId required");
+        return;
+      }
+
+      const userRepository = AppDataSource.getRepository(User);
+      const user = await userRepository.findOne({ where: { id: userId } });
+
+      if (!user) {
+        res.status(404).json("User not found");
+        return;
+      }
+
+      const resumeRepository = AppDataSource.getRepository(Resume);
+      const resume = await resumeRepository.findOne({
+        where: { user: { id: userId } },
+      });
+
+      // const s3key = resumeRepository.findOne({ where: {} });
+
+      if (!resume) {
+        res.status(404).json("Resume Not Found");
+        return;
+      }
+
+      if (!resume.s3key) {
+        res.status(500).json({ message: "S3 key is missing for this resume" });
+        return;
+      }
+
+      const generateSignedUrl = s3.getSignedUrl("getObject", {
+        Bucket: process.env.AWS_S3_BUCKET!,
+        Key: resume.s3key,
+        Expires: 300,
+      });
+      res.json({
+        message: "Presigned Url generated successfully",
+        downloadUrl: generateSignedUrl,
+      });
+    } catch (err) {
+      console.error("Error fetching resume:", err);
+      res.status(400).json({ message: "error while creating url", err });
+    }
+
+    //
+  },
 };
