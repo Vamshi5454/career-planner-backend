@@ -5,10 +5,10 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from "typeorm";
-import { User } from "./User";
+import User from "./User";
 
 @Entity("resumes")
-export class Resume {
+export default class Resume {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
