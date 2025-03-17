@@ -7,14 +7,21 @@ import UserRoute from "./routes/UserRoute";
 import uploadRoute from "./routes/AwsRoute";
 import cors from "cors";
 import logger from "./logs/logger";
-// dotenv.config();
+import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 const port = 3001;
 
 app.use(express.json());
-
+app.use(cookieParser());
 connectDB();
 
 app.use("/user", UserRoute);

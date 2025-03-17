@@ -4,8 +4,7 @@ import { Router, Request, Response } from "express";
 import AppDataSource from "../datasource";
 import User from "../entities/User";
 import { UserController } from "../controllers/UserController";
-import { useContainer } from "class-validator";
-import { AwsController } from "../controllers/AwsController";
+import authenticateUser from "../middleware/JWTAuth";
 
 const router = Router();
 
@@ -13,6 +12,9 @@ const router = Router();
 
 router.post("/register", UserController.register);
 
-router.get("/getUser/:id", UserController.getUser);
+router.get("/getUser", authenticateUser, UserController.getUser);
 // router.post("/upload", upload.single("resume"), AwsController.UploadToAws);
+
+router.post("/login", UserController.login);
+
 export default router;
